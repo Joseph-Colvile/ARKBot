@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 from datetime import UTC, datetime
@@ -7,8 +8,11 @@ from datetime import UTC, datetime
 import discord
 from discord import app_commands
 from discord.ext import tasks
+from dotenv import load_dotenv
 
 from .nitrado import NitradoApiError, NitradoClient, ServerStatus
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("arkbot")

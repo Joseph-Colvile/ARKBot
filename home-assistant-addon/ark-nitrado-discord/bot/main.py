@@ -21,26 +21,6 @@ def _required_env(name: str) -> str:
     return value
 
 
-def _required_secret(name: str) -> str:
-    value = os.getenv(name)
-    if value:
-        return value
-
-    file_path = os.getenv(f"{name}_FILE")
-    if file_path:
-        try:
-            with open(file_path, "r", encoding="utf-8") as secret_file:
-                secret_value = secret_file.read().strip()
-            if secret_value:
-                return secret_value
-        except OSError as exc:
-            raise RuntimeError(f"Could not read secret file for {name}: {file_path}") from exc
-
-    raise RuntimeError(
-        f"Missing required secret: set {name} or {name}_FILE"
-    )
-
-
 def _format_status(status: ServerStatus) -> str:
     players = (
         f"{status.player_current}/{status.player_max}"
@@ -147,9 +127,9 @@ async def before_status_updater() -> None:
 def main() -> None:
     global bot
 
-    discord_token = _required_secret("DISCORD_BOT_TOKEN")
+    discord_token = _required_env("DISCORD_BOT_TOKEN")
     guild_id = int(_required_env("DISCORD_GUILD_ID"))
-    nitrado_token = _required_secret("NITRADO_TOKEN")
+    nitrado_token = _required_env("NITRADO_TOKEN")
     service_id = _required_env("NITRADO_SERVICE_ID")
 
     status_channel_id_raw = os.getenv("STATUS_CHANNEL_ID", "").strip()

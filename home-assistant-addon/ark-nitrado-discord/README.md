@@ -11,29 +11,13 @@ This add-on runs a Discord bot that can:
 Set these in the add-on **Configuration** tab:
 
 - `discord_bot_token`
-- `discord_bot_token_file` (optional alternative)
 - `discord_guild_id`
 - `nitrado_token`
-- `nitrado_token_file` (optional alternative)
 - `nitrado_service_id`
 - `status_channel_id` (optional)
 - `status_update_interval_minutes` (default `10`)
 
-Use either direct token fields or `*_file` fields. This lets you keep tokens out of Git by storing them in files under `/config`.
-
 ## Installation (Home Assistant OS / Supervised)
-
-### Option A: Install from Git repository
-
-1. Ensure repository root contains:
-   - `repository.yaml`
-   - `ark-nitrado-discord/`
-2. In Home Assistant, go to **Settings → Add-ons → Add-on Store**.
-3. Click menu (⋮) → **Repositories**.
-4. Add your repository URL (for example: `https://github.com/<you>/<repo>`).
-5. Open **ARK Nitrado Discord Bot**, configure options, then **Start**.
-
-### Option B: Local add-on install
 
 1. Copy this folder into Home Assistant local addons path:
    - `/addons/local/ark-nitrado-discord`
