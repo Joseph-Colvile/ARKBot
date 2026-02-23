@@ -1,6 +1,6 @@
 import unittest
 
-from bot.nitrado import NitradoClient
+from bot.nitrado import NitradoApiError, NitradoClient
 
 
 class NitradoClientTests(unittest.IsolatedAsyncioTestCase):
@@ -49,6 +49,33 @@ class NitradoClientTests(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(on_message, "server starting")
         self.assertEqual(off_message, "server stopping")
+
+        await client.close()
+
+    async def test_power_on_falls_back_to_restart_on_404(self):
+        client = NitradoClient(token="x", service_id="123")
+        calls: list[str] = []
+
+        async def fake_post_json(path):
+            calls.append(path)
+            if path.endswith("/start"):
+                raise NitradoApiError("Nitrado request failed (404): not found")
+            if path.endswith("/restart"):
+                return {"message": "server restarting"}
+            raise AssertionError(f"Unexpected path: {path}")
+
+        client._post_json = fake_post_json
+
+        on_message = await client.power_on()
+
+        self.assertEqual(on_message, "server restarting")
+        self.assertEqual(
+            calls,
+            [
+                "/services/123/gameservers/start",
+                "/services/123/gameservers/restart",
+            ],
+        )
 
         await client.close()
 

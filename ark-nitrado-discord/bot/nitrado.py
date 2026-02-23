@@ -53,6 +53,18 @@ class NitradoClient:
             )
         return response.json()
 
+    async def _post_json_with_fallback(
+        self,
+        primary_path: str,
+        fallback_path: str,
+    ) -> dict[str, Any]:
+        try:
+            return await self._post_json(primary_path)
+        except NitradoApiError as exc:
+            if "(404)" not in str(exc):
+                raise
+        return await self._post_json(fallback_path)
+
     async def get_status(self) -> ServerStatus:
         payload = await self._get_json(f"/services/{self.service_id}/gameservers")
         data = payload.get("data", {})
@@ -72,7 +84,10 @@ class NitradoClient:
         )
 
     async def power_on(self) -> str:
-        payload = await self._post_json(f"/services/{self.service_id}/gameservers/start")
+        payload = await self._post_json_with_fallback(
+            f"/services/{self.service_id}/gameservers/start",
+            f"/services/{self.service_id}/gameservers/restart",
+        )
         message = payload.get("message") or "Start command sent."
         return str(message)
 
