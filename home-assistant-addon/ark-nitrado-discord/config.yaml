@@ -1,5 +1,5 @@
 name: "ARK Nitrado Discord Bot"
-version: "1.0.0"
+version: "1.0.1"
 slug: "ark_nitrado_discord_bot"
 description: "Discord bot to start/stop and check status of a Nitrado ARK server"
 startup: services

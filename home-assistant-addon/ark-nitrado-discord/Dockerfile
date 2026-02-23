@@ -8,7 +8,10 @@ RUN apk add --no-cache python3 py3-pip
 WORKDIR /app
 
 COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN python3 -m venv /opt/venv \
+	&& /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+ENV PATH="/opt/venv/bin:$PATH"
 
 COPY bot ./bot
 COPY run.sh /run.sh
